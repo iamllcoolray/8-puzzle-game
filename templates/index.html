@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>8-Puzzle Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>8-Puzzle Game</h1>
+
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <label for="image">Upload an image to create puzzle:</label>
+        <input type="file" name="image" id="image" accept="image/*" required />
+        <button type="submit">Upload & Create</button>
+    </form>
+
+    {% if puzzle %}
+        {% if not solvable %}
+            <p style="color:red;">This puzzle configuration is unsolvable!</p>
+        {% endif %}
+        <div id="puzzle-grid">
+            {% for tile in puzzle %}
+                {% if tile == 0 %}
+                <div class="tile blank"></div>
+                {% else %}
+                <div class="tile" data-pos="{{ loop.index0 }}">
+                    <img src="{{ url_for('static', filename='tiles/' + tile) }}" alt="Tile {{ loop.index }}">
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <button id="shuffle-btn">Shuffle</button>
+        <button id="solve-btn">Solve (A*)</button>
+        <button id="reset-btn">Reset</button>
+
+        <div id="message"></div>
+
+    {% endif %}
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
