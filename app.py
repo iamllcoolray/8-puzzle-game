@@ -38,7 +38,10 @@ def upload():
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
 
     # Save original image temporarily
-    filename = str(uuid.uuid4()) + ".png"
+    #filename = str(uuid.uuid4()) + ".png"
+
+    #Save original image
+    filename = "original.png"
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
@@ -58,7 +61,7 @@ def upload():
     session['solvable'] = is_solvable(puzzle)
 
     # Remove original full image after slicing
-    os.remove(filepath)
+    #os.remove(filepath)
 
     return redirect(url_for('index'))
 
