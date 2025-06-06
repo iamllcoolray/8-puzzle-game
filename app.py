@@ -52,6 +52,7 @@ def upload():
     session['puzzle'] = puzzle
     session['tiles'] = tiles_filenames
     session['image_path'] = filename
+    session['solved'] = False
 
     # Check solvability
     session['solvable'] = is_solvable(puzzle)
@@ -100,7 +101,11 @@ def move():
         puzzle[blank_index], puzzle[pos] = puzzle[pos], puzzle[blank_index]
         session['puzzle'] = tuple(puzzle)
         session['solvable'] = is_solvable(puzzle)
-        return jsonify({'puzzle': puzzle, 'solvable': True})
+        if session['puzzle'] == GOAL_STATE:
+            session['solved'] = True
+        else:
+            session['solved'] = False
+        return jsonify({'puzzle': puzzle, 'solvable': True, 'solved' : session['solved']})
     else:
         return jsonify({'error': 'Invalid move'}), 400
 

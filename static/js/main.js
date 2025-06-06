@@ -24,7 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await res.json();
             updateGrid(data.puzzle);
-            message.textContent = '';
+            console.log('Solved:', data.solved);
+            if (data.solved === true){
+                message.textContent = 'Puzzle Solved!';
+            }
+            else{
+                message.textContent = '';
+            }
         } catch {
             message.textContent = 'Server error on move';
         }
