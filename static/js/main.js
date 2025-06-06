@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await res.json();
             updateGrid(data.puzzle);
-            console.log('Solved:', data.solved);
             if (data.solved === true){
                 message.textContent = 'Puzzle Solved!';
             }
