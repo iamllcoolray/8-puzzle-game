@@ -58,14 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             await animateSolution(solution);
+            updateGrid(data.puzzle);
             message.textContent = 'Puzzle solved!';
         } catch {
             message.textContent = 'Server error on solve';
         }
     });
 
-    resetBtn?.addEventListener('click', () => {
-        location.reload();
+    resetBtn?.addEventListener('click', async () => {
+        try {
+            const res = await fetch('/solve');
+            const data = await res.json();
+            updateGrid(data.puzzle);
+            message.textContent = 'Puzzle reset!';
+        } catch {
+            message.textContent = 'Server error on reset';
+        }
     });
 
     function updateGrid(puzzle) {

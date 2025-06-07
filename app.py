@@ -116,8 +116,9 @@ def move():
 def solve():
     puzzle = session.get('puzzle', GOAL_STATE)
     path = solve_puzzle(puzzle)
+    session['puzzle'] = GOAL_STATE
     # Return list of states for front-end animation
-    return jsonify({'solution': path})
+    return jsonify({'solution': path, 'puzzle' : session['puzzle']})
 
 if __name__ == '__main__':
     app.run(debug=True)
