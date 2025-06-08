@@ -38,7 +38,10 @@ def upload():
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f))
 
     # Save original image temporarily
-    filename = str(uuid.uuid4()) + ".png"
+    #filename = str(uuid.uuid4()) + ".png"
+
+    #Save original image
+    filename = "original.png"
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
@@ -52,12 +55,13 @@ def upload():
     session['puzzle'] = puzzle
     session['tiles'] = tiles_filenames
     session['image_path'] = filename
+    session['solved'] = False
 
     # Check solvability
     session['solvable'] = is_solvable(puzzle)
 
     # Remove original full image after slicing
-    os.remove(filepath)
+    #os.remove(filepath)
 
     return redirect(url_for('index'))
 
@@ -100,7 +104,11 @@ def move():
         puzzle[blank_index], puzzle[pos] = puzzle[pos], puzzle[blank_index]
         session['puzzle'] = tuple(puzzle)
         session['solvable'] = is_solvable(puzzle)
-        return jsonify({'puzzle': puzzle, 'solvable': True})
+        if session['puzzle'] == GOAL_STATE:
+            session['solved'] = True
+        else:
+            session['solved'] = False
+        return jsonify({'puzzle': puzzle, 'solvable': True, 'solved' : session['solved']})
     else:
         return jsonify({'error': 'Invalid move'}), 400
 
@@ -108,8 +116,9 @@ def move():
 def solve():
     puzzle = session.get('puzzle', GOAL_STATE)
     path = solve_puzzle(puzzle)
+    session['puzzle'] = GOAL_STATE
     # Return list of states for front-end animation
-    return jsonify({'solution': path})
+    return jsonify({'solution': path, 'puzzle' : session['puzzle']})
 
 if __name__ == '__main__':
     app.run(debug=True)
